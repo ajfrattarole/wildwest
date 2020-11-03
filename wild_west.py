@@ -8,11 +8,19 @@ has_gun = False
 has_seen_angel = False
 has_seen_saia = False
 
+def print_intro(location):
+    print("This game takes place on a 3x3 grid. Use (X, Y) coordinates\n
+           to get around. You may turn on the debug to see where the items\n
+           needed to win the game are.")
+    print("  ")
+    print("--------------------------------------------------------------------")
+
+
 def print_location(location):
     if location == (0,0):
-        print("--Your name is Sarah the Ninja. Your archnemisis is Shirley\n"
-              "  'Angel' Spade and he has challenged you to a shoot out at\n"
-              "  high noon. Find a gun or you might die!")
+        print("--You are the Sheriff. Your archnemisis is Shirley\n"
+              "  Spade the Outlaw and he has challenged you to a\n
+                 shoot out at high noon. Find a gun or you might die!")
         print("  ")
         print("You are in the middle of town. Type 'n' for north, 's' for\n"
               "south, 'e' for east, or 'w' for west.")
@@ -171,7 +179,7 @@ def do_highnoon():
             has_seen_angel = True
     return False
         
-
+def print_intro(location)
 init_world(onOff)
 
 while True:
