@@ -2,11 +2,12 @@ import sys
 import random
 
 onOff = "Y"
+has_begun_game= False;
 location = (0, 0)
-has_chicken = False
+has_wallet = False
 has_gun = False
-has_seen_angel = False
-has_seen_saia = False
+has_seen_shirley = False
+has_seen_shopkeeper = False
 
 def print_intro(location):
     print("This game takes place on a 3x3 grid. Use (X, Y) coordinates\n
@@ -17,13 +18,18 @@ def print_intro(location):
 
 
 def print_location(location):
-    if location == (0,0):
+    if location == (0,0) and has_begun_game == False:
         print("--You are the Sheriff. Your archnemisis is Shirley\n"
               "  Spade the Outlaw and he has challenged you to a\n
                  shoot out at high noon. Find a gun or you might die!")
         print("  ")
+        print("--Hint: Don't go to the middle of town unless you have a gun!")
+        print("  ")
+        print("----------------------------------------------------------------")
         print("You are in the middle of town. Type 'n' for north, 's' for\n"
               "south, 'e' for east, or 'w' for west.")
+    elif location == (0,0) and has_begun_game == True:
+        print("You are at the crossroads.")
     elif location == (-1, 1):
         print("You are northwest of the crossroads.")
     elif location == (0, 1):
@@ -51,10 +57,10 @@ def get_random_location():
             return location
 
 def init_world(onOff):
-    global chicken_location, gun_location, town_location
-    chicken_location = get_random_location()
+    global wallet_location, gun_location, town_location
+    wallet_location = get_random_location()
     town_location = None
-    while town_location == None or town_location == chicken_location:
+    while town_location == None or town_location == wallet_location:
         town_location = get_random_location()
     gun_location = None
     print ("TURN ON DEBUG? Y/N: ")
@@ -63,9 +69,9 @@ def init_world(onOff):
     if onOff == "Y":
       while (gun_location == None or
         gun_location == town_location or
-        gun_location == chicken_location):
+        gun_location == wallet_location):
           gun_location = get_random_location()
-          print("The chicken is at: ", chicken_location)
+          print("The wallet is at: ", wallet_location)
           print("The gun is at: ", gun_location)
           print("The middle of town is at: ", town_location)
         
@@ -101,82 +107,81 @@ def move_player(command, location):
     return location
 
 def do_special_room(location):
-    global chicken_location, gun_location, town_location
-    if location == chicken_location:
-        return do_chicken()
+    global wallet_location, gun_location, town_location
+    if location == wallet_location:
+        return do_wallet()
     elif location == gun_location:
         return do_gun()
     elif location == town_location:
         return do_highnoon()
 
-def do_chicken():
-    global has_chicken
-    if has_chicken:
+def do_wallet():
+    global has_wallet
+    if has_wallet:
         print("--What are you waiting for? You have to get the gun before\n"
               "  high noon!")
     else:
-        print("--You found a Golden Chicken. Maybe you can use this to get\n"
+        print("--You found a wallet. Maybe you can use this to get\n"
               "  another item?")
-        has_chicken = True
+        has_wallet = True
     return False
 
 def do_gun():
-    global has_chicken, has_gun, has_seen_angel, has_seen_saia
-    if has_seen_saia:
-        if has_chicken:
-            print("--Saia gratefully gives you the gun and snatches the chicken\n"
+    global has_wallet, has_gun, has_seen_shirley, has_seen_shopkeeper
+    if has_seen_shopkeeper:
+        if has_gun:
+            print("--The shopkeeper gratefully gives you the gun and snatches the wallet\n"
                   "  from your hands. She then kicks you out.")
             print("--You equip the gun. Now get to the middle of town, it's\n"
                   "  high noon!")
             has_gun = True
         else:
-            print("--You shouldn't've come back if you didn't have the chicken.\n"
-                  "--Saia is so annoyed with you that she grabs the gun and\n"
-                  "  shoots you. You didn't even make it to high noon, you loser.")
+            print("--You shouldn't've come back if you didn't have the wallet.\n"
+                  "--The shopkeeper is so annoyed with you that she grabs the gun and\n"
+                  "  shoots you. You didn't even make it to high noon. Way to go.")
             print(" ")
             print("-----You Died-----")
             sys.exit()
     else:
-        print("--You walk into Saia's Shop and see the gun right away. You\n"
-              "  reach for it, but Saia slams a (sharpened???) fork down\n"
+        print("--You walk into the General Store and see the gun right away. You\n"
+              "  reach for it, but the shopkeeper slams a knife down\n"
               "  into the wood in front of the gun.")
-        print("--'You can have this gun if you find me the Golden Chicken.\n"
-              "   I really want chicken and waffles, but only with the best chicken.'")
-        print("--You agree and Saia kicks you out of her store.")
-        has_seen_saia = True
+        print("--'You can have this gun if you find my missing wallet.\n"
+              "   I lost it around town somewhere.'")
+        print("--You agree and the shopkeeper kicks you out of her store.")
+        has_seen_shopkeep = True
         
     return False
 
 def do_highnoon():
-    global has_chicken, has_gun, has_seen_angel
+    global has_wallet, has_gun, has_seen_shirley
     if has_gun:
-        if has_seen_angel:
+        if has_seen_shirley:
             print("--You draw your gun as fast as you can, but this time\n"
-                  "  Angel was ready for you. You don't even get a chance\n"
+                  "  Shirley was ready for you. You don't even get a chance\n"
                   "  to fire before you're dead.")
             print(" ")
             print("-----You Died-----")
         else:
             print("--You grab your gun and whip it out. You shoot as fast as you\n"
-                  "  can and kill Angel! The town thanks you.")
+                  "  can and kill Shirley! The town thanks you.")
             print(" ")
             print("*~*~*~*~*~You Win!~*~*~*~*~*")
             sys.exit()
     else:
-        if has_seen_angel: 
-            print("--Since you didn't get a weapon, Angel draws his gun and shoots\n"
-                  "  Sarah.")
-            print("--Good job, you killed Sarah the Ninja.")
-            print("--Shame on you  >:(")
+        if has_seen_shirley: 
+            print("--Since you didn't get a weapon, Shirley draws his gun and shoots\n"
+                  "  you.")
+            print("--Good job, Shirley shot the Sheriff (but not the Deputy).")
             print(" ")
             print("-----You Died-----")
             sys.exit()
         else:
-            print("--You walk into the middle of town. You see Angel and are\n"
+            print("--You walk into the middle of town. You see Shirley and are\n"
                   "  about to draw your gun when you realize you don't have one!")
-            print("--You run away as fast as you can and Angel warns you not to\n"
+            print("--You run away as fast as you can and Shirley warns you not to\n"
                   "  come back until you have a gun or he'll kill you!")
-            has_seen_angel = True
+            has_seen_shirley = True
     return False
         
 def print_intro(location)
